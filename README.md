@@ -1,0 +1,1 @@
+# github-action-gitlab-ci-syntax-check
