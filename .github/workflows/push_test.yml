@@ -7,16 +7,27 @@ on:
       - releases/*
 
 jobs:
-  test_glci_trigger:
-    name: Test action
-    runs-on: ubuntu-16.04
+  test_glci_syntax_defaults:
+    name: Test action (with defaults)
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - uses: simp/github-action-gitlab-ci-syntax-check@main
+
+  test_glci_syntax_api_url:
+    name: Test action (with API url)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: simp/github-action-gitlab-ci-syntax-check@main
         with:
-          fetch-depth: 0  # Need full checkout to push to gitlab mirror
-          clean: true
+          gitlab_api_url:  ${{ secrets.GITLAB_API_URL }}
+
+  test_glci_syntax_:
+    name: Test action with TOKEN
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
       - uses: simp/github-action-gitlab-ci-syntax-check@main
         with:
           gitlab_api_private_token: ${{ secrets.GITLAB_API_PRIVATE_TOKEN }}
-          gitlab_api_url:  ${{ secrets.GITLAB_API_URL }}      # https://gitlab.com/api/v4
-

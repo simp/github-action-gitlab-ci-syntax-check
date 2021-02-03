@@ -26,7 +26,19 @@ service's CI Linter API.
 
 ## Usage
 
-TODO
+```yaml
+---
+on:
+  - push
+
+jobs:
+  test_glci_syntax_defaults:
+    name: Test action (with defaults)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: simp/github-action-gitlab-ci-syntax-check@main
+```
 
 ## Reference
 
