@@ -27,17 +27,13 @@ service's CI Linter API.
 ## Usage
 
 ```yaml
----
-on:
-  - push
-
+on: [push]
 jobs:
-  test_glci_syntax_defaults:
-    name: Test action (with defaults)
+  test_glci_syntax:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: simp/github-action-gitlab-ci-syntax-check@main
+      - uses: simp/github-action-gitlab-ci-syntax-check@v1
 ```
 
 ## Reference
@@ -96,6 +92,6 @@ https://simp-project.atlassian.net/
 
 ## License
 
-Apache 2.0, See [LICENSE](https://github.com/simp/github-action-gitlab-ci-syntax-check/blob/main/LICENSE.md) for more information.
+Apache 2.0, See [LICENSE](https://github.com/simp/github-action-gitlab-ci-syntax-check/blob/main/LICENSE) for more information.
 
 [GitHub action]: https://github.com/features/actions
