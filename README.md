@@ -51,13 +51,13 @@ jobs:
 
   <tr>
     <td><strong><code>gitlab_api_private_token</code></strong></td>
-    <td>Yes</td>
+    <td>No</td>
     <td>GitLab API private token (might help with rate-limiting)</td>
   </tr>
 
   <tr>
     <td><strong><code>gitlab_api_url</code></strong></td>
-    <td>Yes</td>
+    <td>No</td>
     <td>Specify a GitLab API other than gitlab.com<br /><em>Default:</em> <code>https://gitlab.com/api/v4</code></td>
   </tr>
 </table>

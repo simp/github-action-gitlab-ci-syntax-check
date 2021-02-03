@@ -15,7 +15,7 @@ author: 'SIMP Team'
 inputs:
   gitlab_api_url:
     description: 'Specify a GitLab API other than gitlab.com'
-    required: true
+    required: false
     default: 'https://gitlab.com/api/v4'
   gitlab_api_private_token:
     description: 'GitLab API private token (might help with rate-limiting?)'
