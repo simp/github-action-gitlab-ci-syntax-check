@@ -1,0 +1,69 @@
+# Validates a `.gitlab-ci.yml` file against a GitLab service's CI Linter API
+#
+# ------------------------------------------------------------------------------
+#
+# NOTES:
+#
+# The CI lint returns an expanded version of the configuration. The expansion
+# does not work for CI configuration added with `include: local`, or with
+# `extends:`.
+#
+---
+name: 'Gitlab CI Syntax Check'
+description: "Validate a `.gitlab-ci.yml` file against a GitLab service's CI Linter API."
+author: 'SIMP Team'
+inputs:
+  gitlab_api_url:
+    description: 'Specify a GitLab API other than gitlab.com'
+    required: true
+    default: 'https://gitlab.com/api/v4'
+  gitlab_api_private_token:
+    description: 'GitLab API private token (might help with rate-limiting?)'
+    required: false
+outputs:
+  valid:
+    description: 'Returns `"true"` if the `.gitlab-ci.yml` is valid'
+    value: ${{ steps.validate-glci-file.outputs.valid }}
+
+branding:
+  icon: gitlab
+  color: green
+
+runs:
+  using: "composite"
+  steps:
+    - name: 'Does GLCI file exist?'
+      id: glci-file-exists
+      shell: bash
+      run: |
+        if [ -f .gitlab-ci.yml ]; then
+          echo '.gitlab-ci.yml exists'
+          echo '::set-output name=exists::true'
+        else
+          echo '::error ::The ".gitlab-ci.yml" file is missing!'
+          echo '::set-output name=exists::false'
+          false
+        fi
+    - name: 'Validate GLCI file syntax'
+      id: validate-glci-file
+      env:
+        GITLAB_API_URL: ${{ inputs.gitlab_api_url }}
+        GITLAB_API_PRIVATE_TOKEN: ${{ inputs.gitlab_api_private_token }}
+      shell: bash
+      run: |
+        GITLAB_API_URL="${GITLAB_API_URL:-https://gitlab.com/api/v4}"
+        CURL_CMD=(curl --http1.1 --fail --silent --show-error --header 'Content-Type: application/json' --data @-)
+        [ -n "$GITLAB_API_PRIVATE_TOKEN" ] && CURL_CMD+=(--header "Authorization: Bearer $GITLAB_API_PRIVATE_TOKEN")
+        data="$(jq --null-input --arg yaml "$(<.gitlab-ci.yml)" '.content=$yaml' )"
+        response="$(echo "$data" | "${CURL_CMD[@]}" "${GITLAB_API_URL}/ci/lint?include_merged_yaml=true" | jq . )"
+        status=$( echo "$response" | jq .status )
+        if [[ "$status" == '"valid"' ]]; then
+          echo '.gitlab-ci.yml is valid'
+          echo '::set-output name=valid::true'
+        else
+          echo '::set-output name=valid::false'
+          echo '::error::The .gitlab-ci.yml" file is invalid!'
+          echo "$response" | jq -r '.errors[] | . = "::error ::\(.)"'
+          printf  "::debug ::.gitlab-ci.yml CI lint service response: %s\n" "$response"
+          false
+        fi
