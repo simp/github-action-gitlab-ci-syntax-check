@@ -16,6 +16,7 @@ inputs:
   gitlab_api_url:
     description: 'v1-compatible API Deprecated'
     required: true
+    default: 'https://gitlab.com/api/v4'
   gitlab_lint_api_url:
     description: 'GitLab project CI linter API endpoint (example: `https://gitlab.com/api/v4/projects/simp%2Fsimp-core`)'
     required: false
