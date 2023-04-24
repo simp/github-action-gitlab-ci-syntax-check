@@ -5,29 +5,44 @@ on:
     branches:
       - main
       - releases/*
+      - tests/*
 
 jobs:
-  test_glci_syntax_defaults:
-    name: Test action (with defaults)
+  test_glci_syntax_v1_api:
+    name: Test action (v1)
     runs-on: ubuntu-latest
     steps:
+      # Symlink + relative path hack because GHA steps.uses can't access the
+      # `github` context.  This allows the repo's CI to test updates to itself.
+      #
+      # See:
+      #   https://github.com/orgs/community/discussions/41927
+      - name: Symlink current Actions repo
+        working-directory: ${{ github.action_path }}
+        shell: bash
+        run: ln -fs $(realpath ../)  /home/runner/work/_actions/current
       - uses: actions/checkout@v2
-      - uses: simp/github-action-gitlab-ci-syntax-check@main
-
-  test_glci_syntax_api_url:
-    name: Test action (with API url)
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: simp/github-action-gitlab-ci-syntax-check@main
+      - uses: ./../../_actions/current/github-action-gitlab-ci-syntax-check
         with:
-          gitlab_api_url:  ${{ secrets.GITLAB_API_URL }}
-
-  test_glci_syntax_:
-    name: Test action with TOKEN
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: simp/github-action-gitlab-ci-syntax-check@main
-        with:
+          gitlab_api_url: '${{ vars.GITLAB_API_URL }}' # v1
           gitlab_api_private_token: ${{ secrets.GITLAB_API_PRIVATE_TOKEN }}
+
+#  test_glci_syntax_lint_api:
+#    name: Test action (lint)
+#    runs-on: ubuntu-latest
+#    steps:
+#      # Symlink + relative path hack because GHA steps.uses can't access the
+#      # `github` context.  This allows the repo's CI to test updates to itself.
+#      #
+#      # See:
+#      #   https://github.com/orgs/community/discussions/41927
+#      - name: Symlink current Actions repo
+#        working-directory: ${{ github.action_path }}
+#        shell: bash
+#        run: ln -fs $(realpath ../)  /home/runner/work/_actions/current
+#      - uses: actions/checkout@v2
+#      - uses: ./../../_actions/current/github-action-gitlab-ci-syntax-check
+#        with:
+#          gitlab_api_url: 'INTENTIONALLY WRONG TEST URLi - SHOULD BE IGNORED'
+#          gitlab_lint_api_url: ${{ vars.GITLAB_CI_LINT_PROJECT_API_URL }}
+#          gitlab_api_private_token: ${{ secrets.GITLAB_API_PRIVATE_TOKEN }}

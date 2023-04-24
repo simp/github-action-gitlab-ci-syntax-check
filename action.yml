@@ -14,12 +14,14 @@ description: "Validate a `.gitlab-ci.yml` file against a GitLab service's CI Lin
 author: 'SIMP Team'
 inputs:
   gitlab_api_url:
-    description: 'Specify a GitLab API other than gitlab.com'
+    description: 'v1-compatible API Deprecated'
+    required: true
+  gitlab_lint_api_url:
+    description: 'GitLab project CI linter API endpoint (example: `https://gitlab.com/api/v4/projects/simp%2Fsimp-core`)'
     required: false
-    default: 'https://gitlab.com/api/v4'
   gitlab_api_private_token:
-    description: 'GitLab API private token (might help with rate-limiting?)'
-    required: false
+    description: 'GitLab API private token (necessary to access project CI linter)'
+    required: true
 outputs:
   valid:
     description: 'Returns `"true"` if the `.gitlab-ci.yml` is valid'
@@ -38,30 +40,45 @@ runs:
       run: |
         if [ -f .gitlab-ci.yml ]; then
           echo '.gitlab-ci.yml exists'
-          echo '::set-output name=exists::true'
+          echo 'name=exists::true' >> "$GITHUB_OUTPUT"
         else
           echo '::error ::The ".gitlab-ci.yml" file is missing!'
-          echo '::set-output name=exists::false'
+          echo 'name=exists::false' >> "$GITHUB_OUTPUT"
           false
         fi
+
     - name: 'Validate GLCI file syntax'
       id: validate-glci-file
       env:
         GITLAB_API_URL: ${{ inputs.gitlab_api_url }}
+        GITLAB_LINT_API_URL: ${{ inputs.gitlab_lint_api_url }}
         GITLAB_API_PRIVATE_TOKEN: ${{ inputs.gitlab_api_private_token }}
       shell: bash
       run: |
-        GITLAB_API_URL="${GITLAB_API_URL:-https://gitlab.com/api/v4}"
-        CURL_CMD=(curl --http1.1 --fail --silent --show-error --header 'Content-Type: application/json' --data @-)
-        [ -n "$GITLAB_API_PRIVATE_TOKEN" ] && CURL_CMD+=(--header "Authorization: Bearer $GITLAB_API_PRIVATE_TOKEN")
+        echo -n 'Test length of API token:'
+        echo "$GITLAB_API_PRIVATE_TOKEN" | wc -c
+
+        echo -n 'Test length of API url:'
+        echo "GITLAB_API_URL" | wc -c
+        echo "GITLAB_API_URL: $GITLAB_API_URL"
+        GITLAB_API_URL="${GITLAB_API_URL:-missing--gitlab-api-url}/projects/simp%2Fsimp-core"
+
+        GITLAB_LINT_API_URL="${GITLAB_LINT_API_URL:-$GITLAB_API_URL}"
+        echo -n 'Test length of project lint API url:'
+        echo "GITLAB_LINT_API_URL" | wc -c
+        echo "GITLAB_LINT_API_URL: $GITLAB_LINT_API_URL"
+
+        # Trouble cmd:
+        CURL_CMD=(curl --header "Authorization: Bearer $GITLAB_API_PRIVATE_TOKEN"  --http1.1 --fail --show-error --header 'Content-Type: application/json' --data @-)
         data="$(jq --null-input --arg yaml "$(<.gitlab-ci.yml)" '.content=$yaml' )"
-        response="$(echo "$data" | "${CURL_CMD[@]}" "${GITLAB_API_URL}/ci/lint?include_merged_yaml=true" | jq . )"
-        status=$( echo "$response" | jq .status )
-        if [[ "$status" == '"valid"' ]]; then
+        echo "$data" | sha256sum
+        response="$(echo "$data" | "${CURL_CMD[@]}" "${GITLAB_LINT_API_URL}/ci/lint" | jq . )"
+        valid=$( echo "$response" | jq .valid )
+        if [[ $valid  == 'true' ]]; then
           echo '.gitlab-ci.yml is valid'
-          echo '::set-output name=valid::true'
+          echo 'name=valid::true' >> "$GITHUB_OUTPUT"
         else
-          echo '::set-output name=valid::false'
+          echo 'name=valid::false' >> "$GITHUB_OUTPUT"
           echo '::error::The .gitlab-ci.yml" file is invalid!'
           echo "$response" | jq -r '.errors[] | . = "::error ::\(.)"'
           printf  "::debug ::.gitlab-ci.yml CI lint service response: %s\n" "$response"
