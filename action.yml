@@ -56,8 +56,8 @@ runs:
         [ -n "$GITLAB_API_PRIVATE_TOKEN" ] && CURL_CMD+=(--header "Authorization: Bearer $GITLAB_API_PRIVATE_TOKEN")
         data="$(jq --null-input --arg yaml "$(<.gitlab-ci.yml)" '.content=$yaml' )"
         response="$(echo "$data" | "${CURL_CMD[@]}" "${GITLAB_API_URL}/ci/lint" | jq . )"
-        status=$( echo "$response" | jq .status )
-        if [[ "$status" == '"valid"' ]]; then
+        valid=$( echo "$response" | jq .valid )
+        if [[ $valid  == 'true' ]]; then
           echo '.gitlab-ci.yml is valid'
           echo 'name=valid::true' >> "$GITHUB_OUTPUT"
         else
