@@ -16,7 +16,6 @@ inputs:
   gitlab_api_url:
     description: 'v1-compatible API Deprecated'
     required: true
-    default: 'https://gitlab.com/api/v4'
   gitlab_lint_api_url:
     description: 'GitLab project CI linter API endpoint (example: `https://gitlab.com/api/v4/projects/simp%2Fsimp-core`)'
     required: false
@@ -62,10 +61,10 @@ runs:
         echo -n 'Test length of API url:'
         echo "GITLAB_API_URL" | wc -c
         echo "GITLAB_API_URL: $GITLAB_API_URL"
-        GITLAB_API_URL="${GITLAB_API_URL:-missing--gitlab-api-url}/projects/simp%2Fsimp-core"
+        GITLAB_API_URL="${GITLAB_API_URL:-https://gitlab.com/api/v4}/projects/simp%2Fsimp-core"
 
         GITLAB_LINT_API_URL="${GITLAB_LINT_API_URL:-$GITLAB_API_URL}"
-        echo -n 'Test length of project lint API url:'
+        'https://gitlab.com/api/v4'echo -n 'Test length of project lint API url:'
         echo "GITLAB_LINT_API_URL" | wc -c
         echo "GITLAB_LINT_API_URL: $GITLAB_LINT_API_URL"
 
