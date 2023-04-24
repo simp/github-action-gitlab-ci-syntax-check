@@ -53,7 +53,7 @@ runs:
       shell: bash
       run: |
         GITLAB_API_URL="${GITLAB_API_URL:-xxxxxxxxxxxxxxxxxxxxx}"
-        CURL_CMD=(curl --header "Authorization: Bearer $GITLAB_API_PRIVATE_TOKEN"  --capath /dev/null --cacert "$CA_BUNDLE_PATH" --http1.1 --fail --verbose --show-error --header 'Content-Type: application/json' --data @-)
+      CURL_CMD=(curl --header "PRIVATE-KEY: $GITLAB_API_PRIVATE_TOKEN"  --capath /dev/null --cacert "$CA_BUNDLE_PATH" --http1.1 --fail --verbose --show-error --header 'Content-Type: application/json' --data @-)
         data="$(jq --null-input --arg yaml "$(<.gitlab-ci.yml)" '.content=$yaml' )"
         echo "$data" | sha256sum
         response="$(echo "$data" | "${CURL_CMD[@]}" "${GITLAB_API_URL}/ci/lint" | jq . )"
