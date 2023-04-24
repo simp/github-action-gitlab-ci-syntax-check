@@ -16,7 +16,7 @@ inputs:
   gitlab_api_url:
     description: 'Specify a GitLab API other than gitlab.com'
     required: false
-    default: 'https://gitlab.com/api/v4/projects/${{ github.event.organization.login }}%2F${{ github.event.repository.name }}/ci/lint'
+    default: 'https://gitlab.com/api/v4/projects/${{ github.event.organization.login }}%2F${{ github.event.repository.name }}'
   gitlab_api_private_token:
     description: 'GitLab API private token (might help with rate-limiting?)'
     required: false
@@ -51,7 +51,7 @@ runs:
         GITLAB_API_PRIVATE_TOKEN: ${{ inputs.gitlab_api_private_token }}
       shell: bash
       run: |
-        GITLAB_API_URL="${GITLAB_API_URL:-https://gitlab.com/api/v4}"
+        GITLAB_API_URL="${GITLAB_API_URL:-xxxxxxxxxxxxxxxxxxxxx}"
         CURL_CMD=(curl --http1.1 --fail --silent --show-error --header 'Content-Type: application/json' --data @-)
         [ -n "$GITLAB_API_PRIVATE_TOKEN" ] && CURL_CMD+=(--header "Authorization: Bearer $GITLAB_API_PRIVATE_TOKEN")
         data="$(jq --null-input --arg yaml "$(<.gitlab-ci.yml)" '.content=$yaml' )"
