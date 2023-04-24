@@ -16,7 +16,7 @@ inputs:
   gitlab_api_url:
     description: 'Specify a GitLab API other than gitlab.com'
     required: false
-    default: 'https://gitlab.com/api/v4/projects/${{ github.event.organization.login }}%2F${{ github.event.repository.name }}'
+    default: 'https://gitlab.com/api/v4/projects/${{ github.event.organization.login }}%2F${{ github.event.repository.name }}/ci/lint'
   gitlab_api_private_token:
     description: 'GitLab API private token (might help with rate-limiting?)'
     required: false
@@ -38,10 +38,10 @@ runs:
       run: |
         if [ -f .gitlab-ci.yml ]; then
           echo '.gitlab-ci.yml exists'
-          echo '::set-output name=exists::true'
+          echo 'name=exists::true' >> "$GITHUB_OUTPUT"
         else
           echo '::error ::The ".gitlab-ci.yml" file is missing!'
-          echo '::set-output name=exists::false'
+          echo 'name=exists::false' >> "$GITHUB_OUTPUT"
           false
         fi
     - name: 'Validate GLCI file syntax'
@@ -59,9 +59,9 @@ runs:
         status=$( echo "$response" | jq .status )
         if [[ "$status" == '"valid"' ]]; then
           echo '.gitlab-ci.yml is valid'
-          echo '::set-output name=valid::true'
+          echo 'name=valid::true' >> "$GITHUB_OUTPUT"
         else
-          echo '::set-output name=valid::false'
+          echo 'name=valid::false' >> "$GITHUB_OUTPUT"
           echo '::error::The .gitlab-ci.yml" file is invalid!'
           echo "$response" | jq -r '.errors[] | . = "::error ::\(.)"'
           printf  "::debug ::.gitlab-ci.yml CI lint service response: %s\n" "$response"
