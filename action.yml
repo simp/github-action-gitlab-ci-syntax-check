@@ -64,7 +64,7 @@ runs:
         GITLAB_API_URL="${GITLAB_API_URL:-https://gitlab.com/api/v4}/projects/simp%2Fsimp-core"
 
         GITLAB_LINT_API_URL="${GITLAB_LINT_API_URL:-$GITLAB_API_URL}"
-        'https://gitlab.com/api/v4'echo -n 'Test length of project lint API url:'
+        echo -n 'Test length of project lint API url:'
         echo "GITLAB_LINT_API_URL" | wc -c
         echo "GITLAB_LINT_API_URL: $GITLAB_LINT_API_URL"
 
