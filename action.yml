@@ -52,7 +52,7 @@ runs:
         CA_BUNDLE_PATH: '${{ github.action_path }}/ca-bundle.crt'
       shell: bash
       run: |
-        GITLAB_API_URL="${GITLAB_API_URL:-xxxxxxxxxxxxxxxxxxxxx}"
+        GITLAB_API_URL="${GITLAB_API_URL:-missing--gitlab-api-url}"
         CURL_CMD=(curl --header "PRIVATE-KEY: $GITLAB_API_PRIVATE_TOKEN"  --capath /dev/null --cacert "$CA_BUNDLE_PATH" --http1.1 --fail --verbose --show-error --header 'Content-Type: application/json' --data @-)
         data="$(jq --null-input --arg yaml "$(<.gitlab-ci.yml)" '.content=$yaml' )"
         echo "$data" | sha256sum
