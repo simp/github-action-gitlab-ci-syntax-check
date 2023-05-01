@@ -44,38 +44,15 @@ runs:
           false
         fi
 
-    - name: 'Examine Context contents'
-      if: always()
-      shell: bash
-      env:
-        THING: ${{ github.event.repository.name }}
-        ORG: ${{ github.event.organization.login }}
-        INPUTS_CONTEXT: ${{ toJson(inputs) }}
-      run: |
-        echo "$INPUTS_CONTEXT"
-
-    - name: api_input_is_empty
-      shell: bash
-      if: inputs.gitlab_api_private_token == ''
-      run: echo ==== inputs.gitlab_api_private_token is empty!
-
-    - name: api_url_is_empty
-      shell: bash
-      if: inputs.gitlab_api_url == ''
-      run: echo ==== inputs.gitlab_api_url is empty!
-
     - name: 'Validate GLCI file syntax'
       id: validate-glci-file
       env:
         GITLAB_API_URL: ${{ inputs.gitlab_api_url }}
         GITLAB_API_PRIVATE_TOKEN: ${{ inputs.gitlab_api_private_token }}
-        CA_BUNDLE_PATH: '${{ github.action_path }}/ca-bundle.crt'
       shell: bash
       run: |
         echo -n 'Test length of API token:'
         echo "$GITLAB_API_PRIVATE_TOKEN" | wc -c
-
-
         echo -n 'Test length of API url:'
         echo "GITLAB_API_URL" | wc -c
 
