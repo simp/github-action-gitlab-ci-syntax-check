@@ -50,19 +50,13 @@ runs:
       env:
         THING: ${{ github.event.repository.name }}
         ORG: ${{ github.event.organization.login }}
-      runs-on: ubuntu-latest
-        ###needs: [ glci-syntax, contributor-permissions ]
-      steps:
-        - name: Dump contexts
-          env:
-            GITHUB_CONTEXT: ${{ toJson(github) }}
-          run: echo "$GITHUB_CONTEXT"
-        - name: Dump contexts
-          env:
-            INPUTS_CONTEXT: ${{ toJson(inputs) }}
-          run: echo "$INPUTS_CONTEXT"
-        - name: Dump env vars
-          run: env | sort
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+          INPUTS_CONTEXT: ${{ toJson(inputs) }}
+        run: |
+          echo "$GITHUB_CONTEXT"
+          echo "$INPUTS_CONTEXT"
+          env | sort
     - name api_input_is_empty:
       shell: bash
       if: inputs.gitlab_api_private_token == ''
