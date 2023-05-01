@@ -47,6 +47,7 @@ runs:
 
     - name: 'Examine Context contents'
       if: always()
+      shell: bash
       env:
         THING: ${{ github.event.repository.name }}
         ORG: ${{ github.event.organization.login }}
