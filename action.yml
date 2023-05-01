@@ -19,7 +19,7 @@ inputs:
     default: 'https://gitlab.com/api/v4/projects/${{ github.event.organization.login }}%2F${{ github.event.repository.name }}'
   gitlab_api_private_token:
     description: 'GitLab API private token (might help with rate-limiting?)'
-    required: false
+    required: true
 outputs:
   valid:
     description: 'Returns `"true"` if the `.gitlab-ci.yml` is valid'
