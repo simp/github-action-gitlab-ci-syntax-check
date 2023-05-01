@@ -54,10 +54,10 @@ runs:
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
           INPUTS_CONTEXT: ${{ toJson(inputs) }}
-        run: |
-          echo "$GITHUB_CONTEXT"
-          echo "$INPUTS_CONTEXT"
-          env | sort
+      run: |
+        echo "$GITHUB_CONTEXT"
+        echo "$INPUTS_CONTEXT"
+        env | sort
     - name api_input_is_empty:
       shell: bash
       if: inputs.gitlab_api_private_token == ''
