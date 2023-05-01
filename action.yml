@@ -51,10 +51,8 @@ runs:
       env:
         THING: ${{ github.event.repository.name }}
         ORG: ${{ github.event.organization.login }}
-        GITHUB_CONTEXT: ${{ toJson(github) }}
         INPUTS_CONTEXT: ${{ toJson(inputs) }}
       run: |
-        #echo "$GITHUB_CONTEXT"
         echo "$INPUTS_CONTEXT"
         echo "----"
         env | sort
