@@ -53,8 +53,6 @@ runs:
         INPUTS_CONTEXT: ${{ toJson(inputs) }}
       run: |
         echo "$INPUTS_CONTEXT"
-        echo "----"
-        env | sort
 
     - name: api_input_is_empty
       shell: bash
@@ -82,7 +80,7 @@ runs:
         echo "GITLAB_API_URL" | wc -c
 
         GITLAB_API_URL="${GITLAB_API_URL:-missing--gitlab-api-url}"
-      CURL_CMD=(curl --header "Authorization: Bearer $GITLAB_API_PRIVATE_TOKEN"  --capath /dev/null --cacert "$CA_BUNDLE_PATH" --http1.1 --fail --verbose --show-error --header 'Content-Type: application/json' --data @-)
+        CURL_CMD=(curl --header "Authorization: Bearer $GITLAB_API_PRIVATE_TOKEN"  --capath /dev/null --cacert "$CA_BUNDLE_PATH" --http1.1 --fail --verbose --show-error --header 'Content-Type: application/json' --data @-)
         data="$(jq --null-input --arg yaml "$(<.gitlab-ci.yml)" '.content=$yaml' )"
         echo "$data" | sha256sum
         response="$(echo "$data" | "${CURL_CMD[@]}" "${GITLAB_API_URL}/ci/lint" | jq . )"
