@@ -16,7 +16,6 @@ inputs:
   gitlab_api_url:
     description: 'Specify a GitLab API other than gitlab.com'
     required: true
-      #efault: 'https://gitlab.com/api/v4/projects/${{ github.event.organization.login }}%2F${{ github.event.repository.name }}'
   gitlab_api_private_token:
     description: 'GitLab API private token (might help with rate-limiting?)'
     required: true
@@ -60,12 +59,12 @@ runs:
     - name: api_input_is_empty
       shell: bash
       if: inputs.gitlab_api_private_token == ''
-      run: echo aaaaaagh
+      run: echo ==== inputs.gitlab_api_private_token is empty!
 
     - name: api_url_is_empty
       shell: bash
       if: inputs.gitlab_api_url == ''
-      run: echo aaaaaagh
+      run: echo ==== inputs.gitlab_api_url is empty!
 
     - name: 'Validate GLCI file syntax'
       id: validate-glci-file
