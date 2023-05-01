@@ -56,6 +56,7 @@ runs:
       run: |
         #echo "$GITHUB_CONTEXT"
         echo "$INPUTS_CONTEXT"
+        echo "----"
         env | sort
 
     - name: api_input_is_empty
