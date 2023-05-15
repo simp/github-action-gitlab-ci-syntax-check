@@ -19,7 +19,7 @@ jobs:
         shell: bash
         run: ln -fs $(realpath ../)  /home/runner/work/_actions/current
       - uses: actions/checkout@v2
-      - uses: ./../../_actions/current/my-action
+      - uses: ./../../_actions/current/github-action-gitlab-ci-syntax-check
         with:
           gitlab_api_url:  '${{ vars.GITLAB_API_URL }}/projects/simp%2Fsimp-core'
           gitlab_api_private_token: ${{ secrets.GITLAB_API_PRIVATE_TOKEN }}
@@ -36,7 +36,7 @@ jobs:
         shell: bash
         run: ln -fs $(realpath ../)  /home/runner/work/_actions/current
       - uses: actions/checkout@v2
-      - uses: ./../../_actions/current/my-action
+      - uses: ./../../_actions/current/github-action-gitlab-ci-syntax-check
 
   test_glci_syntax_api_url:
     name: Test action (API url-only)
@@ -48,7 +48,7 @@ jobs:
         shell: bash
         run: ln -fs $(realpath ../)  /home/runner/work/_actions/current
       - uses: actions/checkout@v2
-      - uses: ./../../_actions/current/my-action
+      - uses: ./../../_actions/current/github-action-gitlab-ci-syntax-check
         with:
           gitlab_api_url:  '${{ vars.GITLAB_API_URL }}/projects/simp%2Fsimp-core'
 
@@ -62,7 +62,7 @@ jobs:
         shell: bash
         run: ln -fs $(realpath ../)  /home/runner/work/_actions/current
       - uses: actions/checkout@v2
-      - uses: ./../../_actions/current/my-action
+      - uses: ./../../_actions/current/github-action-gitlab-ci-syntax-check
         with:
           gitlab_api_private_token: ${{ secrets.GITLAB_API_PRIVATE_TOKEN }}
 
