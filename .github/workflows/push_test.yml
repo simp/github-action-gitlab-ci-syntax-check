@@ -22,7 +22,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: simp/github-action-gitlab-ci-syntax-check@tests/fix-gitlab-api
         with:
-          gitlab_api_url:  ${{ vars.GITLAB_API_URL }}/projects/simp%2Fsimp-core
+          gitlab_api_url:  '${{ vars.GITLAB_API_URL }}/projects/simp%2Fsimp-core'
 
   test_glci_syntax_token:
     name: Test action with TOKEN
