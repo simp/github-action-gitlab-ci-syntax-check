@@ -32,3 +32,14 @@ jobs:
       - uses: simp/github-action-gitlab-ci-syntax-check@tests/fix-gitlab-api
         with:
           gitlab_api_private_token: ${{ secrets.GITLAB_API_PRIVATE_TOKEN }}
+
+  test_glci_syntax_api_full:
+    name: Test action (with API url)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: simp/github-action-gitlab-ci-syntax-check@tests/fix-gitlab-api
+        with:
+          gitlab_api_url:  '${{ vars.GITLAB_API_URL }}/projects/simp%2Fsimp-core'
+          gitlab_api_private_token: ${{ secrets.GITLAB_API_PRIVATE_TOKEN }}
+
