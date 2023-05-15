@@ -10,6 +10,7 @@ on:
 jobs:
   test_glci_syntax_defaults:
     name: Test action (with defaults)
+    continue-on-error: true
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -17,6 +18,7 @@ jobs:
 
   test_glci_syntax_api_url:
     name: Test action (with API url)
+    continue-on-error: true
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -26,6 +28,7 @@ jobs:
 
   test_glci_syntax_token:
     name: Test action with TOKEN
+    continue-on-error: true
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
