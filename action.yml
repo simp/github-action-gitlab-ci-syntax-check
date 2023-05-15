@@ -14,10 +14,10 @@ description: "Validate a `.gitlab-ci.yml` file against a GitLab service's CI Lin
 author: 'SIMP Team'
 inputs:
   gitlab_api_url:
-    description: 'Specify a GitLab API other than gitlab.com'
+    description: 'GitLab project CI linter API endpoint (example: `https://gitlab.com/api/v4/projects/simp%2Fsimp-core`)'
     required: true
   gitlab_api_private_token:
-    description: 'GitLab API private token (might help with rate-limiting?)'
+    description: 'GitLab API private token (necessary to access project CI linter)'
     required: true
 outputs:
   valid:
