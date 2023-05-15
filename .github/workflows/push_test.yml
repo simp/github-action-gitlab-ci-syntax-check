@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - releases/*
+      - tests/*
 
 jobs:
   test_glci_syntax_defaults:
