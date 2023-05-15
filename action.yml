@@ -55,6 +55,7 @@ runs:
         echo "$GITLAB_API_PRIVATE_TOKEN" | wc -c
         echo -n 'Test length of API url:'
         echo "GITLAB_API_URL" | wc -c
+        echo "GITLAB_API_URL: $GITLAB_API_URL"
 
         GITLAB_API_URL="${GITLAB_API_URL:-missing--gitlab-api-url}"
         # Trouble cmd:
