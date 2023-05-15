@@ -37,7 +37,7 @@ jobs:
           gitlab_api_private_token: ${{ secrets.GITLAB_API_PRIVATE_TOKEN }}
 
   test_glci_syntax_api_full:
-    name: Test action (with API url)
+    name: Test action (given gitlab ci token + API url)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
