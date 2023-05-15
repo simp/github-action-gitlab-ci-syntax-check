@@ -13,14 +13,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: simp/github-action-gitlab-ci-syntax-check@${{ github.ref }}
-
+      - uses: simp/github-action-gitlab-ci-syntax-check@tests/fix-gitlab-api
   test_glci_syntax_api_url:
     name: Test action (with API url)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: simp/github-action-gitlab-ci-syntax-check@${{ github.ref }}
+      - uses: simp/github-action-gitlab-ci-syntax-check@tests/fix-gitlab-api
         with:
           gitlab_api_url:  ${{ secrets.GITLAB_API_URL }}
 
@@ -29,6 +28,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: simp/github-action-gitlab-ci-syntax-check@${{ github.ref }}
+      - uses: simp/github-action-gitlab-ci-syntax-check@tests/fix-gitlab-api
         with:
           gitlab_api_private_token: ${{ secrets.GITLAB_API_PRIVATE_TOKEN }}
