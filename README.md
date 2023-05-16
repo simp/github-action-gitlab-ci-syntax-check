@@ -24,6 +24,12 @@ Validate the syntax of `.gitlab-ci.yml` files
 A [Github action] to validate a `.gitlab-ci.yml` file against a GitLab
 service's CI Linter API.
 
+Note that as of 04/2023, this API requires both a specific gitlab projects' [CI
+Lint API] endpoint and a personal access token that can use that project's
+endpoint.
+
+[CI Lint API]: https://docs.gitlab.com/ee/api/lint.html
+
 ## Usage
 
 ```yaml
@@ -34,6 +40,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: simp/github-action-gitlab-ci-syntax-check@v1
+        with:
+          gitlab_api_url:  '${{ vars.GITLAB_API_URL }}/projects/simp%2Fsimp-core'
+          gitlab_api_private_token: ${{ secrets.GITLAB_API_PRIVATE_TOKEN }}
+
 ```
 
 ## Reference
