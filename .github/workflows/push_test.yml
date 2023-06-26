@@ -9,7 +9,7 @@ on:
 
 jobs:
   test_glci_syntax_v1_api:
-    name: Test action (full)
+    name: Test action (v1)
     runs-on: ubuntu-latest
     steps:
       # Symlink + relative path hack because GHA steps.uses can't access the
@@ -24,11 +24,11 @@ jobs:
       - uses: actions/checkout@v2
       - uses: ./../../_actions/current/github-action-gitlab-ci-syntax-check
         with:
-          gitlab_api_url: '${{ vars.GITLAB_API_URL }}/projects/simp%2Fsimp-core' # v1
+          gitlab_api_url: '${{ vars.GITLAB_API_URL }}' # v1
           gitlab_api_private_token: ${{ secrets.GITLAB_API_PRIVATE_TOKEN }}
 
   test_glci_syntax_lint_api:
-    name: Test action (full)
+    name: Test action (lint)
     runs-on: ubuntu-latest
     steps:
       # Symlink + relative path hack because GHA steps.uses can't access the
