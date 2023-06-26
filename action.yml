@@ -14,8 +14,11 @@ description: "Validate a `.gitlab-ci.yml` file against a GitLab service's CI Lin
 author: 'SIMP Team'
 inputs:
   gitlab_api_url:
-    description: 'GitLab project CI linter API endpoint (example: `https://gitlab.com/api/v4/projects/simp%2Fsimp-core`)'
+    description: 'v1-compatible API Deprecated'
     required: true
+  gitlab_lint_api_url:
+    description: 'GitLab project CI linter API endpoint (example: `https://gitlab.com/api/v4/projects/simp%2Fsimp-core`)'
+    required: false
   gitlab_api_private_token:
     description: 'GitLab API private token (necessary to access project CI linter)'
     required: true
@@ -48,21 +51,28 @@ runs:
       id: validate-glci-file
       env:
         GITLAB_API_URL: ${{ inputs.gitlab_api_url }}
+        GITLAB_LINT_API_URL: ${{ inputs.gitlab_lint_api_url }}
         GITLAB_API_PRIVATE_TOKEN: ${{ inputs.gitlab_api_private_token }}
       shell: bash
       run: |
         echo -n 'Test length of API token:'
         echo "$GITLAB_API_PRIVATE_TOKEN" | wc -c
+
         echo -n 'Test length of API url:'
         echo "GITLAB_API_URL" | wc -c
         echo "GITLAB_API_URL: $GITLAB_API_URL"
+        GITLAB_API_URL="${GITLAB_API_URL:-missing--gitlab-api-url}/projects/simp%2Fsimp-core"
 
-        GITLAB_API_URL="${GITLAB_API_URL:-missing--gitlab-api-url}"
+        GITLAB_LINT_API_URL="${GITLAB_LINT_API_URL:-$GITLAB_API_URL}"
+        echo -n 'Test length of project lint API url:'
+        echo "GITLAB_LINT_API_URL" | wc -c
+        echo "GITLAB_LINT_API_URL: $GITLAB_LINT_API_URL"
+
         # Trouble cmd:
         CURL_CMD=(curl --header "Authorization: Bearer $GITLAB_API_PRIVATE_TOKEN"  --http1.1 --fail --show-error --header 'Content-Type: application/json' --data @-)
         data="$(jq --null-input --arg yaml "$(<.gitlab-ci.yml)" '.content=$yaml' )"
         echo "$data" | sha256sum
-        response="$(echo "$data" | "${CURL_CMD[@]}" "${GITLAB_API_URL}/ci/lint" | jq . )"
+        response="$(echo "$data" | "${CURL_CMD[@]}" "${GITLAB_LINT_API_URL}/ci/lint" | jq . )"
         valid=$( echo "$response" | jq .valid )
         if [[ $valid  == 'true' ]]; then
           echo '.gitlab-ci.yml is valid'
